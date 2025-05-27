@@ -96,17 +96,15 @@ hdfs dfs -rm -r /user/admin/output
 python mapreduce/analyze.py hdfs:///user/admin/input/data.csv -r hadoop --output-dir hdfs:///user/admin/output
 ```
 
-En caso de error por directorio de salida existente, usar:
-
-```bash
-hdfs dfs -rm -r /user/admin/output
-```
-
 ---
 
 ## 7. Descargar resultados de HDFS al nodo master
 
 ```bash
+
+# Eliminar resultados previos si existen
+rm -f output/output.txt
+
 mkdir -p output
 hdfs dfs -getmerge /user/admin/output/ output/output.txt
 ```
