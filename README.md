@@ -71,8 +71,6 @@ hdfs dfs -put data/data.csv /user/admin/input/
 
 # Verificar existencia
 hdfs dfs -ls /user/admin/input
-hdfs dfs -mkdir -p /user/admin/output
-hdfs dfs -ls /user/admin/output
 ```
 
 ---
