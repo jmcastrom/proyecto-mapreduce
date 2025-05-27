@@ -172,5 +172,5 @@ chmod +x run_pipeline.sh
 ## Observaciones Finales
 
 * El archivo de salida `output.txt` debe existir antes de que la API pueda mostrar resultados.
-* Asegúrate de tener acceso público abierto al puerto 5000 en las reglas del Security Group de EC2.
+* Se debe tener acceso público abierto al puerto 5000 en las reglas del Security Group de EC2.
 * En caso de problemas de red, usa el DNS público o la IP directamente desde el navegador.
