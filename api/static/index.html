@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MapReduce Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        .chart-container { width: 90vw; max-width: 900px; margin-bottom: 3em; }
+    </style>
+</head>
+<body>
+    <h1>MapReduce Analytics Dashboard</h1>
+
+    <section>
+        <h2>Temperaturas (2025)</h2>
+        <button onclick="loadTemperaturas()">Mostrar Gráfico</button>
+        <div class="chart-container">
+            <canvas id="tempChart"></canvas>
+        </div>
+    </section>
+
+    <section>
+        <h2>EPS</h2>
+        <button onclick="loadEPS()">Mostrar Gráfico</button>
+        <div class="chart-container">
+            <canvas id="epsChart"></canvas>
+        </div>
+    </section>
+
+    <script>
+        let tempChart, epsChart;
+
+        async function loadTemperaturas() {
+            const res = await fetch('/temperaturas');
+            const data = await res.json();
+            const labels = data.map(d => d.timestamp);
+            const temps = data.map(d => d.temperatura_promedio);
+
+            if (tempChart) tempChart.destroy();
+            const ctx = document.getElementById('tempChart').getContext('2d');
+            tempChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Temperatura Promedio',
+                        data: temps,
+                        borderColor: 'rgba(75,192,192,1)',
+                        backgroundColor: 'rgba(75,192,192,0.2)',
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: 'Fecha' } },
+                        y: { title: { display: true, text: 'Temperatura (°C)' } }
+                    }
+                }
+            });
+        }
+
+        async function loadEPS() {
+            const res = await fetch('/eps');
+            const data = await res.json();
+
+            if (data.length === 0) return;
+
+            // Sort by max wait time descending and take top 5
+            const top5 = data
+                .slice()
+                .sort((a, b) => b.tiempo_espera_maximo - a.tiempo_espera_maximo)
+                .slice(0, 5);
+
+            const labels = top5.map(d => d.eps);
+            const avgWait = top5.map(d => d.tiempo_espera_promedio);
+            const maxWait = top5.map(d => d.tiempo_espera_maximo);
+
+            if (epsChart) epsChart.destroy();
+            const ctx = document.getElementById('epsChart').getContext('2d');
+            epsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Tiempo Espera Promedio',
+                            data: avgWait,
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                        },
+                        {
+                            label: 'Tiempo Espera Máximo',
+                            data: maxWait,
+                            backgroundColor: 'rgba(255, 99, 132, 0.7)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'EPS' },
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 45,
+                                minRotation: 20
+                            }
+                        },
+                        y: {
+                            title: { display: true, text: 'Tiempo (minutos)' },
+                            type: 'logarithmic',
+                            beginAtZero: false,
+                            min: 1,
+                            ticks: {
+                                callback: function(value) {
+                                    return Number(value).toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

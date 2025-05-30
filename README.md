@@ -15,12 +15,15 @@ Este documento describe el procedimiento completo para desplegar y ejecutar un p
 proyecto-mapreduce/
 ├── api/
 │   └── app.py
+│   └── static/
+│       └── index.html
 ├── data/
 │   └── data.csv
+│   └── EPS_data.csv
 ├── mapreduce/
 │   └── analyze.py
+│   └── mapreduce_EPS.py
 ├── output/
-├── run_pipeline.sh
 ├── requirements.txt
 └── README.md
 ```
@@ -68,7 +71,7 @@ scp -i C:\Users\Msi\Downloads\p3-key.pem.pem -r "C:\Users\Msi\Desktop\proyecto-m
 ```bash
 hdfs dfs -mkdir -p /user/admin/input
 hdfs dfs -put data/data.csv /user/admin/input/
-
+hdfs dfs -put data/EPS_data.csv /user/admin/input/
 # Verificar existencia
 hdfs dfs -ls /user/admin/input
 ```
@@ -94,6 +97,8 @@ hdfs dfs -rm -r /user/admin/output
 
 # Ejecutar MapReduce
 python mapreduce/analyze.py hdfs:///user/admin/input/data.csv -r hadoop --output-dir hdfs:///user/admin/output
+
+python mapreduce/mapreduce_EPS.py hdfs:///user/admin/input/EPS_data.csv -r hadoop --output-dir hdfs:///user/admin/eps_output
 ```
 
 ---
@@ -107,6 +112,7 @@ rm -f output/output.txt
 
 mkdir -p output
 hdfs dfs -getmerge /user/admin/output/ output/output.txt
+hdfs dfs -getmerge /user/admin/eps_output/ output/eps_output.txt
 ```
 
 ---
