@@ -58,7 +58,6 @@ Desde el nodo master:
 # Clonación del repositorio del proyecto
 git clone https://github.com/jmcastrom/proyecto-mapreduce
 cd proyecto-mapreduce
-scp -i C:\Users\Msi\Downloads\p3-key.pem.pem -r "C:\Users\Msi\Desktop\proyecto-mapreduce - copia\*" hadoop@ec2-100-26-229-126.compute-1.amazonaws.com:/home/hadoop/proyecto-mapreduce
 ```
 
 ---
