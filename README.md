@@ -55,12 +55,9 @@ hdfs dfs -cat /user/admin/test/prueba.txt
 Desde el nodo master:
 
 ```bash
-mkdir -p /home/hadoop/proyecto-mapreduce
-```
-
-Desde la terminal local:
-
-```bash
+# Clonación del repositorio del proyecto
+git clone https://github.com/jmcastrom/proyecto-mapreduce
+cd proyecto-mapreduce
 scp -i C:\Users\Msi\Downloads\p3-key.pem.pem -r "C:\Users\Msi\Desktop\proyecto-mapreduce - copia\*" hadoop@ec2-100-26-229-126.compute-1.amazonaws.com:/home/hadoop/proyecto-mapreduce
 ```
 
@@ -134,43 +131,6 @@ Para identificar y cerrar el proceso anterior (si el puerto ya está en uso):
 ```bash
 lsof -i :5000
 kill -9 <PID>
-```
-
----
-
-## 9. Automatizar ejecución con `run_pipeline.sh`
-
-El script `run_pipeline.sh` realiza el flujo completo desde la eliminación de la salida en HDFS hasta la generación de `output.txt`.
-
-### Contenido del script:
-
-```bash
-#!/bin/bash
-
-source venv/bin/activate
-
-echo "Eliminando salida anterior en HDFS..."
-hdfs dfs -rm -r -f /user/admin/output
-
-echo "Ejecutando MapReduce con analyze.py..."
-python3 mapreduce/analyze.py hdfs:///user/admin/input/data.csv -r hadoop --output-dir hdfs:///user/admin/output
-
-echo "Limpiando carpeta local de salida..."
-rm -rf output
-mkdir -p output
-
-echo "Descargando resultados de HDFS..."
-hdfs dfs -getmerge /user/admin/output/ output/output.txt
-
-echo "Proceso completado. Ahora puedes ejecutar tu API si lo deseas:"
-echo "   python3 api/app.py --host=0.0.0.0 --port=5000"
-```
-
-### Ejecutar:
-
-```bash
-chmod +x run_pipeline.sh
-./run_pipeline.sh
 ```
 
 ---
