@@ -2,6 +2,8 @@
 
 Este documento describe el procedimiento completo para desplegar y ejecutar un proyecto de procesamiento distribuido con Hadoop MapReduce sobre Amazon EMR. La salida del procesamiento se sirve mediante una API Flask accesible desde el exterior.
 
+Una version en video sobre este proyecto puede ser vista en el siguiente enlace: https://www.youtube.com/watch?v=B9WU4dgQ-lY&ab_channel=AlejandroQuintero
+
 ---
 
 ## Requisitos previos
@@ -138,4 +140,4 @@ kill -9 <PID>
 
 * El archivo de salida `output.txt` debe existir antes de que la API pueda mostrar resultados.
 * Se debe tener acceso público abierto al puerto 5000 en las reglas del Security Group de EC2.
-* En caso de problemas de red, usa el DNS público o la IP directamente desde el navegador.
+* En caso de problemas de red, se usa el DNS público o la IP directamente desde el navegador.
